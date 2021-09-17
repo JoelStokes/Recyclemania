@@ -36,12 +36,12 @@ public class LeverController : MonoBehaviour {
 		}
 
 		if (crushing && !bottomHit && crusherCounter > 7 && gameStart) {
-			TopCrusher.transform.position = new Vector3 (TopCrusher.transform.position.x, TopCrusher.transform.position.y - .4f,
+			TopCrusher.transform.position = new Vector3 (TopCrusher.transform.position.x, TopCrusher.transform.position.y - .4f * (Time.deltaTime * 60),
 				TopCrusher.transform.position.z);
 			if (BottomCrusher.transform.position.y+4f >= TopCrusher.transform.position.y)
 				bottomHit = true;
 		} else if (bottomHit) {
-			TopCrusher.transform.position = new Vector3 (TopCrusher.transform.position.x, TopCrusher.transform.position.y + .4f,
+			TopCrusher.transform.position = new Vector3 (TopCrusher.transform.position.x, TopCrusher.transform.position.y + .4f * (Time.deltaTime * 60),
 				TopCrusher.transform.position.z);
 			if (TopCrusher.transform.position.y >= topDefaultY)
 			{

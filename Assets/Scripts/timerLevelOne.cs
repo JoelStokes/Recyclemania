@@ -11,8 +11,8 @@ public class timerLevelOne : MonoBehaviour
 
 	public SpriteRenderer Black;
 	public bool gameStart = false;
-	private int startCounter = 0;
-	private int startLimit = 120;
+	private float startCounter = 0;
+	private float startLimit = 25;
 
 	public bool gameEnd = false;
 	public int endCounter = 0;	//How long to show "Time Up!" before transfering to next scene
@@ -50,15 +50,15 @@ public class timerLevelOne : MonoBehaviour
 			timeLeft -= Time.deltaTime;
 		} else if (gameStart) {
 			timerText.text = "Times Up!";
-			LoadScene (scene);
+			//LoadScene (scene);
 		} else {
-			if (startCounter > startLimit)
+			if (startCounter > startLimit * (Time.deltaTime * 60))
 				gameStart = true;
 			else
-				startCounter++;
+				startCounter += Time.deltaTime;
 
-			if (Black.color.a > 0 && startCounter > 1)
-				Black.color = new Vector4 (1, 1, 1, Black.color.a - .015f);
+			if (Black.color.a > 0 && startCounter > 1 * (Time.deltaTime * 60))
+				Black.color = new Vector4 (1, 1, 1, Black.color.a - .015f * (Time.deltaTime * 60));
 				
 		}
 
@@ -88,7 +88,7 @@ public class timerLevelOne : MonoBehaviour
 
     public void LoadScene(int scene)
     {
-        Application.LoadLevel(scene);
+        //Application.LoadLevel(scene);
 
 		/*for (int i = 0; i < 4; i++) {		//FOR INDIVIDUAL BUILD! REMOVE!!
 			SetToFalse[i].SetActive (false);

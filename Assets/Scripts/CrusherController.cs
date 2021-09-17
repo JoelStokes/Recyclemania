@@ -10,7 +10,7 @@ public class CrusherController : MonoBehaviour {
 	private int score = 0;	//Determines the level
 	private int multiplier = 1;
 	private int matchCounter = 0;
-	private int counter = 0;	//Controls how long until next object spawn
+	private float counter = 0;	//Controls how long until next object spawn
 	private const int COUNTER_DEFAULT = 23;		//20 in old
 	private const int POST_METAL_COUNTER = 43;	//40 in old
 	private float respawnRate;
@@ -22,7 +22,7 @@ public class CrusherController : MonoBehaviour {
 	public int cardboardCount = 0;
 	public int metalCount = 0;
 	private bool crushCheck = false;
-	private int crushCounter = 0;	//Creates delay after lever press and before crusher movement downwards
+	private float crushCounter = 0;	//Creates delay after lever press and before crusher movement downwards
 
 	private bool lerp1 = false;	//Grid Lerp 1
 	private int lerpArray1;
@@ -60,7 +60,7 @@ public class CrusherController : MonoBehaviour {
 	public GameObject Wheel;
 	public GameObject BlueprintConsole; //Used for spawn position of creations
 	public GameObject BackgroundConveyor;
-	public int backgroundConveyorCounter = 0;
+	public float backgroundConveyorCounter = 0;
 
 	public int plasticNumber;
 	public int cardboardNumber;
@@ -95,14 +95,14 @@ public class CrusherController : MonoBehaviour {
 	private GridCube gridCubeScript;
 	private timerLevelOne timerScript;
 
-	private int blueprintCounter = 0;	//Used at start to randomize screen before game has begun
+	private float blueprintCounter = 0;	//Used at start to randomize screen before game has begun
 	private bool gameStart = false;
 
 	public GameObject[] GridCubeArray;	//Default 12, can change if decided not difficult enough/too difficult
 
 	public void MoveConveyor()	//Animates conveyor belt movement
 	{
-		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed, Conveyor.transform.position.y, 
+		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed*(Time.deltaTime * 60), Conveyor.transform.position.y, 
 			Conveyor.transform.position.z);
 
 		if (Conveyor.transform.position.x >=2.3398)
@@ -267,22 +267,35 @@ public class CrusherController : MonoBehaviour {
 
 		newBlueprint ();
 	}
-	
+
+    private void FixedUpdate()
+    {
+		if (backgroundConveyorCounter < 20.4f * Time.fixedTime)   //Create background conveyor objects
+			backgroundConveyorCounter += Time.fixedTime;
+		else
+		{
+			backgroundConveyorCounter = 0;
+			Instantiate(BackgroundConveyor, new Vector3(BlueprintConsole.transform.position.x + .05f,
+				BlueprintConsole.transform.position.y - .22f, 2.56f), Quaternion.identity);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 
 		if (!gameStart) {
-			if (blueprintCounter > 5) {
-				newBlueprint ();
+			if (blueprintCounter > 1 * (Time.deltaTime * 60))
+			{
+				newBlueprint();
 				blueprintCounter = 0;
 			}
 			else
-				blueprintCounter++;
+				blueprintCounter += Time.deltaTime;
 
 			if (GetReady.color.a > 0) {
-				GetReady.color = new Vector4 (1, 1, 0, GetReady.color.a - .01f);
+				GetReady.color = new Vector4 (1, 1, 0, GetReady.color.a - .01f * (Time.deltaTime * 60));
 				GetReady.transform.position = new Vector3 (GetReady.transform.position.x,
-					GetReady.transform.position.y - .01f, GetReady.transform.position.z);
+					GetReady.transform.position.y - .01f * (Time.deltaTime * 60), GetReady.transform.position.z);
 			}
 
 			timerScript = ScoreObject.GetComponent<timerLevelOne> ();
@@ -320,7 +333,7 @@ public class CrusherController : MonoBehaviour {
 		if (shrinkAndDestroy) {
 			if (shrinkObject != null) {
 				if (shrinkObject.transform.localScale.x > .2f)
-					shrinkObject.transform.localScale = new Vector3 (shrinkObject.transform.localScale.x - .15f, 
+					shrinkObject.transform.localScale = new Vector3 (shrinkObject.transform.localScale.x - .15f * (Time.deltaTime * 60), 
 						shrinkObject.transform.localScale.y - .15f, 1);
 				else
 					Destroy (shrinkObject.gameObject);
@@ -333,7 +346,7 @@ public class CrusherController : MonoBehaviour {
 			if (checkmarkCounter > 0) {
 				checkmarkCounter--;
 			} else {
-				Checkmark.color = new Vector4 (1,1,1,Checkmark.color.a-.05f);
+				Checkmark.color = new Vector4 (1,1,1,Checkmark.color.a-.05f * (Time.deltaTime * 60));
 			}
 			X.color = new Vector4 (1, 1, 1, 0);
 		}
@@ -341,31 +354,32 @@ public class CrusherController : MonoBehaviour {
 			if (checkmarkCounter > 0) {
 				checkmarkCounter--;
 			} else {
-				X.color = new Vector4 (1, 1, 1, X.color.a - .05f);
+				X.color = new Vector4 (1, 1, 1, X.color.a - .05f * (Time.deltaTime * 60));
 			}
 			Checkmark.color = new Vector4 (1, 1, 1, 0);
 		}
 		if (Go.color.a > 0) {
-			Go.color = new Vector4 (0, 1, 0, Go.color.a - .025f);
+			Go.color = new Vector4 (0, 1, 0, Go.color.a - .025f * (Time.deltaTime * 60));
 		}
 
 		if (SpeedUp.color.a > 0) {
-			SpeedUp.transform.position = new Vector3 (SpeedUp.transform.position.x, SpeedUp.transform.position.y - .01f, 
+			SpeedUp.transform.position = new Vector3 (SpeedUp.transform.position.x, SpeedUp.transform.position.y - .01f * (Time.deltaTime * 60), 
 				SpeedUp.transform.position.z);
 			if (speedUpCounter > 0) {
 				speedUpCounter--;
 				SpeedUp.color = new Vector4 (SpeedUp.color.r, SpeedUp.color.b, 1, SpeedUp.color.a);
 			} else {
-				SpeedUp.color = new Vector4 (SpeedUp.color.r, SpeedUp.color.b, 1, SpeedUp.color.a - .02f);
+				SpeedUp.color = new Vector4 (SpeedUp.color.r, SpeedUp.color.b, 1, SpeedUp.color.a - .02f * (Time.deltaTime * 60));
 			}
 		} else if (Warning.color.a > 0) {
-			Warning.transform.position = new Vector3 (Warning.transform.position.x, Warning.transform.position.y - .01f, 
+			Warning.transform.position = new Vector3 (Warning.transform.position.x, Warning.transform.position.y - .01f * (Time.deltaTime * 60), 
 				Warning.transform.position.z);
 			if (speedUpCounter > 0) {
 				speedUpCounter--;
 				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a);
 			} else {
-				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a - .02f);
+				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a - .02f * (Time.deltaTime * 60));
+				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a - .02f * (Time.deltaTime * 60));
 			}
 		}
 
@@ -373,7 +387,7 @@ public class CrusherController : MonoBehaviour {
 			crushCheck = false;
 
 		if (leverScript.getCrushing () && crushCounter < 8 && !crushCheck)
-			crushCounter++;
+			crushCounter+=Time.deltaTime*60;
 
 		if (leverScript.getCrushing () && !crushCheck && crushCounter > 7 && gameStart) {	//
 			crushCheck = true;
@@ -442,60 +456,68 @@ public class CrusherController : MonoBehaviour {
 
 			crushCounter = 0;
 			}
-				
+
 		//Spawn Objects
-		if (counter > respawnRate - ((level *2f)))
+		if (counter > (respawnRate * (Time.deltaTime * 10)) - (level * 2f * (Time.deltaTime * 10)))
 		{
-			if (level > levelMetalStart) {
-				int randomNumber = UnityEngine.Random.Range (0, 4);
-				switch (randomNumber) {
-				case 0:
-					Instantiate (Plastic, new Vector3 (-9.5f, Conveyor.transform.position.y+.6f, -1), Quaternion.identity);
-					break;
-				case 1:
-					Instantiate (Cardboard, new Vector3 (-9.5f, Conveyor.transform.position.y+.6f, -1), Quaternion.identity);
-					break;
-				case 2:
-					Instantiate (Glass, new Vector3 (-9.5f, Conveyor.transform.position.y+.6f, -1), Quaternion.identity);
-					break;
-				case 3:
-					Instantiate (Metal, new Vector3 (-9.5f, Conveyor.transform.position.y+.6f, -1), Quaternion.identity);
-					break;
+			if (level > levelMetalStart)
+			{
+				int randomNumber = UnityEngine.Random.Range(0, 4);
+				switch (randomNumber)
+				{
+					case 0:
+						Instantiate(Plastic, new Vector3(-9.5f, Conveyor.transform.position.y + .6f, -1), Quaternion.identity);
+						break;
+					case 1:
+						Instantiate(Cardboard, new Vector3(-9.5f, Conveyor.transform.position.y + .6f, -1), Quaternion.identity);
+						break;
+					case 2:
+						Instantiate(Glass, new Vector3(-9.5f, Conveyor.transform.position.y + .6f, -1), Quaternion.identity);
+						break;
+					case 3:
+						Instantiate(Metal, new Vector3(-9.5f, Conveyor.transform.position.y + .6f, -1), Quaternion.identity);
+						break;
 				}
 
-				randomNumber = UnityEngine.Random.Range (0, 4);
-				switch (randomNumber) {
-				case 0:
-					Instantiate (Plastic, new Vector3 (-9.5f, Conveyor.transform.position.y-.6f, -1), Quaternion.identity);
-					break;
-				case 1:
-					Instantiate (Cardboard, new Vector3 (-9.5f, Conveyor.transform.position.y-.6f, -1), Quaternion.identity);
-					break;
-				case 2:
-					Instantiate (Glass, new Vector3 (-9.5f, Conveyor.transform.position.y-.6f, -1), Quaternion.identity);
-					break;
-				case 3:
-					Instantiate (Metal, new Vector3 (-9.5f, Conveyor.transform.position.y-.6f, -1), Quaternion.identity);
-					break;
+				randomNumber = UnityEngine.Random.Range(0, 4);
+				switch (randomNumber)
+				{
+					case 0:
+						Instantiate(Plastic, new Vector3(-9.5f, Conveyor.transform.position.y - .6f, -1), Quaternion.identity);
+						break;
+					case 1:
+						Instantiate(Cardboard, new Vector3(-9.5f, Conveyor.transform.position.y - .6f, -1), Quaternion.identity);
+						break;
+					case 2:
+						Instantiate(Glass, new Vector3(-9.5f, Conveyor.transform.position.y - .6f, -1), Quaternion.identity);
+						break;
+					case 3:
+						Instantiate(Metal, new Vector3(-9.5f, Conveyor.transform.position.y - .6f, -1), Quaternion.identity);
+						break;
 				}
-			} else {
-				int randomNumber = UnityEngine.Random.Range (0, 3);
-				switch (randomNumber) {
-				case 0:
-					Instantiate (Plastic, new Vector3 (-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
-					break;
-				case 1:
-					Instantiate (Cardboard, new Vector3 (-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
-					break;
-				case 2:
-					Instantiate (Glass, new Vector3 (-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
-					break;
+			}
+			else
+			{
+				int randomNumber = UnityEngine.Random.Range(0, 3);
+				switch (randomNumber)
+				{
+					case 0:
+						Instantiate(Plastic, new Vector3(-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
+						break;
+					case 1:
+						Instantiate(Cardboard, new Vector3(-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
+						break;
+					case 2:
+						Instantiate(Glass, new Vector3(-9.5f, Conveyor.transform.position.y, -1), Quaternion.identity);
+						break;
 				}
 			}
 			counter = 0;
 		}
-		else
-			counter++;
+        else
+        {
+			counter += Time.deltaTime;
+		}
 
 		//Lerp management
 		if (lerp1) {
@@ -530,16 +552,7 @@ public class CrusherController : MonoBehaviour {
 					lerp2 = false;
 				}
 			}
-		}
-
-		if (backgroundConveyorCounter < 28)	//Create background conveyor objects
-			backgroundConveyorCounter++;
-		else {
-			backgroundConveyorCounter = 0;
-			Instantiate (BackgroundConveyor, new Vector3 (BlueprintConsole.transform.position.x+.05f, 
-				BlueprintConsole.transform.position.y-.22f, 2.56f), Quaternion.identity);
-		}
-	
+		}	
 	}
 
 	void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid

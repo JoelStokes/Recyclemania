@@ -53,7 +53,7 @@ public class MoveObjects : MonoBehaviour {
 			distCovered = (Time.time - startTime) * lerpSpeed;
 			fracJourney = distCovered / journeyLength;
 			if (sizeCounter > 1.1f) {
-				sizeCounter -= .05f;
+				sizeCounter -= .05f * (Time.deltaTime * 60);
 				transform.localScale = new Vector3 (sizeCounter, sizeCounter, 1);
 			}
 			transform.position = Vector3.Lerp (transform.position, 
@@ -69,14 +69,14 @@ public class MoveObjects : MonoBehaviour {
 
 		if (shrinkAndDestroy) {
 			if (transform.localScale.x > .2f)
-				transform.localScale = new Vector3 (transform.localScale.x - .1f, transform.localScale.y - .1f, 1);
+				transform.localScale = new Vector3 (transform.localScale.x - .1f * (Time.deltaTime * 60), transform.localScale.y - .1f * (Time.deltaTime * 60), 1);
 			else
 				Destroy(gameObject);
 		}
 			
 		if (!clicked && onConveyor && (transform.position.y == defaultY)) {
 			transform.position = new Vector3 (
-				transform.position.x+speed, defaultY, transform.position.z);
+				transform.position.x+speed * (Time.deltaTime * 60), defaultY, transform.position.z);
 			if (transform.position.x > 9.5f)
 				Destroy (gameObject);
 		} else if (!clicked && onConveyor && !lerp) {
