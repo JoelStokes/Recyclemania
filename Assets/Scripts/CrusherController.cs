@@ -100,6 +100,8 @@ public class CrusherController : MonoBehaviour {
 
 	public GameObject[] GridCubeArray;	//Default 12, can change if decided not difficult enough/too difficult
 
+    private bool gameEnd = false;
+
 	public void MoveConveyor()	//Animates conveyor belt movement
 	{
 		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed*(Time.deltaTime * 60), Conveyor.transform.position.y, 
@@ -307,7 +309,6 @@ public class CrusherController : MonoBehaviour {
 
 		//Debug.Log ("Plastic: " + plasticCount + ", Cardboard: " + cardboardCount + ", Glass: " + glassCount + ", Metal: " + metalCount);
 		//DEBUGGING - to show 
-
 		if (speedUpWait) {
 			if (!leverScript.getCrushing ()) {
 				speedUpCounter = 10;
@@ -397,8 +398,8 @@ public class CrusherController : MonoBehaviour {
 				gridCubeScript.inUse = false;
 			}
 
-            Debug.Log("Glass: " + glassCount + ", Plastic: " + plasticCount + ", Cardboard: " + cardboardCount);
-            Debug.Log("Actual Values, Glass: " + glassNumber + ", Plastic: " + plasticNumber + ", Cardboard: " + cardboardCount);
+            /*Debug.Log("Glass: " + glassCount + ", Plastic: " + plasticCount + ", Cardboard: " + cardboardCount);
+            Debug.Log("Actual Values, Glass: " + glassNumber + ", Plastic: " + plasticNumber + ", Cardboard: " + cardboardCount);*/
 
 			if ((glassCount == glassNumber) && (plasticCount == plasticNumber) && (cardboardCount == cardboardNumber)
 				&& (metalCount == metalNumber)) {
@@ -461,7 +462,7 @@ public class CrusherController : MonoBehaviour {
 			}
 
 		//Spawn Objects
-		if (counter > (respawnRate * (Time.deltaTime * 10)) - (level * 2f * (Time.deltaTime * 10)))
+		if (counter > (respawnRate * (Time.deltaTime * 15)) - (level * 2f * (Time.deltaTime * 15)))
 		{
 			if (level > levelMetalStart)
 			{
@@ -557,6 +558,15 @@ public class CrusherController : MonoBehaviour {
 			}
 		}	
 	}
+
+    public void EndGame()
+    {
+        gameEnd = true;
+        ScoreObject.SetActive(false);
+        MultiplierObject.SetActive(false);
+
+        //Need to put in code to prevent player from playing after time end
+    }
 
 	void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid
 	{

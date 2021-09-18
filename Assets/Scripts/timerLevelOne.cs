@@ -17,6 +17,8 @@ public class timerLevelOne : MonoBehaviour
 	public bool gameEnd = false;
 	public int endCounter = 0;	//How long to show "Time Up!" before transfering to next scene
 
+    public ResultsManager resultsManager;
+
 	/*public GameObject[] SetToFalse;	//REMOVE THESE LATER! FOR INDIVIDUAL TESTING BUILDS!!!
 	public GameObject ScoreDisplay;
 	bool moveToFront = false;*/
@@ -25,7 +27,7 @@ public class timerLevelOne : MonoBehaviour
     private int seconds;
     private int elapedSeconds;
     private float elapsedTime;
-	private int colorCounter=0;
+	private float colorCounter=0;
 
 	void Start()
 	{
@@ -48,10 +50,11 @@ public class timerLevelOne : MonoBehaviour
 				timerText.text = minutes.ToString () + ":0" + seconds.ToString ();
 			}
 			timeLeft -= Time.deltaTime;
-		} else if (gameStart) {
-			timerText.text = "Times Up!";
-			//LoadScene (scene);
-		} else {
+		} else if (gameStart && !gameEnd) {
+			timerText.text = "";
+            resultsManager.StartResults();
+            gameEnd = true;
+		} else if (!gameEnd) {
 			if (startCounter > startLimit * (Time.deltaTime * 60))
 				gameStart = true;
 			else
@@ -64,14 +67,14 @@ public class timerLevelOne : MonoBehaviour
 
         elapsedTime += Time.deltaTime;
 
-		if (timeLeft < 16) {	//Flash color from red to white when 15 seconds or less left
-			colorCounter++;
-			if (colorCounter <=30)
-				timerText.color = Color.red;
-			else if (colorCounter<=60)
-				timerText.color = Color.white;
-			else
-				colorCounter = 0;
+		if (timeLeft < 16) {    //Flash color from red to white when 15 seconds or less left
+            colorCounter += Time.deltaTime;
+            if (colorCounter < 30 * (Time.deltaTime * 60))
+                timerText.color = new Vector4(1,.1f,.1f,1);
+            else if (colorCounter < 60 * (Time.deltaTime * 60))
+                timerText.color = Color.white;
+            else
+                colorCounter = 0;
 		}
     }
 
