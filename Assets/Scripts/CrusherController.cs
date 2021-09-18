@@ -386,16 +386,19 @@ public class CrusherController : MonoBehaviour {
 		if (!leverScript.getCrushing ())	//To avoid double checking crushing process
 			crushCheck = false;
 
-		if (leverScript.getCrushing () && crushCounter < 8 && !crushCheck)
+		if (leverScript.getCrushing () && crushCounter < 8*(Time.deltaTime*60) && !crushCheck)
 			crushCounter+=Time.deltaTime*60;
 
-		if (leverScript.getCrushing () && !crushCheck && crushCounter > 7 && gameStart) {	//
+		if (leverScript.getCrushing () && !crushCheck && crushCounter > 7 * (Time.deltaTime * 60) && gameStart) {	//
 			crushCheck = true;
 			for (int i=0; i<12; i++)
 			{
 				gridCubeScript = GridCubeArray[i].GetComponent<GridCube>();
 				gridCubeScript.inUse = false;
 			}
+
+            Debug.Log("Glass: " + glassCount + ", Plastic: " + plasticCount + ", Cardboard: " + cardboardCount);
+            Debug.Log("Actual Values, Glass: " + glassNumber + ", Plastic: " + plasticNumber + ", Cardboard: " + cardboardCount);
 
 			if ((glassCount == glassNumber) && (plasticCount == plasticNumber) && (cardboardCount == cardboardNumber)
 				&& (metalCount == metalNumber)) {
@@ -602,9 +605,10 @@ public class CrusherController : MonoBehaviour {
 		}
 	}
 
+    /*
 	void OnTriggerExit2D(Collider2D other)	//To subtract if items removed
 	{
-		if (other.gameObject != shrinkObject) {
+		if (other.gameObject != shrinkObject && !crushCheck) {
 			if (other.gameObject.CompareTag ("Glass"))
 				glassCount--;
 			else if (other.gameObject.CompareTag ("Plastic"))
@@ -614,5 +618,5 @@ public class CrusherController : MonoBehaviour {
 			else if (other.gameObject.CompareTag ("Metal"))
 				metalCount--;
 		}
-	}
+	}*/
 }
