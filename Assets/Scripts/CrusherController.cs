@@ -82,8 +82,8 @@ public class CrusherController : MonoBehaviour {
 
 	public SpriteRenderer SpeedUp;
 	public SpriteRenderer Warning;
-	public SpriteRenderer GetReady;
-	public SpriteRenderer Go;
+	public TextMesh GetReady;
+	public TextMesh Go;
 	private float speedUpStartY;
 	private int speedUpCounter = 0;
 	private bool speedUpWait = false;
@@ -295,9 +295,9 @@ public class CrusherController : MonoBehaviour {
 				blueprintCounter += Time.deltaTime;
 
 			if (GetReady.color.a > 0) {
-				GetReady.color = new Vector4 (1, 1, 0, GetReady.color.a - .01f * (Time.deltaTime * 60));
+				GetReady.color = new Vector4 (1, 1, 0, GetReady.color.a - (.01f * (Time.deltaTime * 60)));
 				GetReady.transform.position = new Vector3 (GetReady.transform.position.x,
-					GetReady.transform.position.y - .01f * (Time.deltaTime * 60), GetReady.transform.position.z);
+					GetReady.transform.position.y - (.01f * (Time.deltaTime * 60)), GetReady.transform.position.z);
 			}
 
 			timerScript = ScoreObject.GetComponent<timerLevelOne> ();

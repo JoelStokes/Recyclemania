@@ -12,7 +12,7 @@ public class timerLevelOne : MonoBehaviour
 	public SpriteRenderer Black;
 	public bool gameStart = false;
 	private float startCounter = 0;
-	private float startLimit = 25;
+	private float startLimit = 30;
 
 	public bool gameEnd = false;
 	public int endCounter = 0;	//How long to show "Time Up!" before transfering to next scene
