@@ -64,5 +64,4 @@ public class LeverController : MonoBehaviour {
 			anim.SetTrigger ("Crush");	//Play lever animation
 		}
 	}
-
 }

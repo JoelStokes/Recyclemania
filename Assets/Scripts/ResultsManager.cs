@@ -9,6 +9,7 @@ public class ResultsManager : MonoBehaviour
     public Animator letterAnim;
     public Animator pinAnim;
     public Animator textAnim;
+    public Animator buttonAnim;
 
     public GameObject Accuracy;
     public GameObject CrushCount;
@@ -29,6 +30,8 @@ public class ResultsManager : MonoBehaviour
     private bool letterStarted = false;
     private float textLim = 3.5f;
     private bool textStarted = false;
+    private float buttonLim = 5.5f;
+    private bool buttonStarted = false;
 
     private int finalScore = 0;
     private float finalAccuracy = 0;
@@ -88,6 +91,10 @@ public class ResultsManager : MonoBehaviour
             {
                 textAnim.SetTrigger("Show");
                 textStarted = true;
+            } else if (clipboardTimer > buttonLim && !buttonStarted)
+            {
+                buttonAnim.SetTrigger("Rise");
+                buttonStarted = true;
             }
         }
     }
