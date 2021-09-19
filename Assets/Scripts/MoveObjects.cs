@@ -30,6 +30,8 @@ public class MoveObjects : MonoBehaviour {
 	private GameObject ScoreObject;
 	private bool gameStart = false;
 
+    public bool gameEnd = false;
+
 	// Use this for initialization
 	void Start () {
 		transform.localScale = new Vector3 (.9f, .9f, 1);
@@ -44,12 +46,13 @@ public class MoveObjects : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (!gameStart) {
+		if (!gameStart || !gameEnd) {
 			timerScript = ScoreObject.GetComponent<timerLevelOne> ();
 			gameStart = timerScript.gameStart;
+            gameEnd = timerScript.gameEnd;
 		}
 
-		if (lerp) {
+        if (lerp) {
 			distCovered = (Time.time - startTime) * lerpSpeed;
 			fracJourney = distCovered / journeyLength;
 			if (sizeCounter > 1.1f) {
@@ -86,7 +89,7 @@ public class MoveObjects : MonoBehaviour {
 			startTime = Time.time;
 			sizeCounter = 1.5f;
 		} else {
-			if (Input.GetButton ("Fire1") && onConveyor) {	//Fix later on
+			if (Input.GetButton ("Fire1") && onConveyor && !gameEnd) {	//Fix later on
 				mousePosition = Input.mousePosition;
 				mousePosition = Camera.main.ScreenToWorldPoint (mousePosition);
 				transform.position = Vector2.Lerp (transform.position, mousePosition, moveSpeed);
