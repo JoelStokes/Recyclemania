@@ -103,8 +103,12 @@ public class CrusherController : MonoBehaviour {
     private bool gameEnd = false;
     public Animator TimeUp;
     public GameObject MultiplierX;
+    public ResultsManager resultsManager;
 
-	public void MoveConveyor()	//Animates conveyor belt movement
+    private int totalCrushes = 0;
+    private int totalCorrect = 0;
+
+    public void MoveConveyor()	//Animates conveyor belt movement
 	{
 		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed*(Time.deltaTime * 60), Conveyor.transform.position.y, 
 			Conveyor.transform.position.z);
@@ -401,6 +405,8 @@ public class CrusherController : MonoBehaviour {
             /*Debug.Log("Glass: " + glassCount + ", Plastic: " + plasticCount + ", Cardboard: " + cardboardCount);
             Debug.Log("Actual Values, Glass: " + glassNumber + ", Plastic: " + plasticNumber + ", Cardboard: " + cardboardCount);*/
 
+            totalCrushes++;
+
 			if ((glassCount == glassNumber) && (plasticCount == plasticNumber) && (cardboardCount == cardboardNumber)
 				&& (metalCount == metalNumber)) {
 				/*int result1 = Mathf.CeilToInt (level / 4) * BASE;
@@ -412,6 +418,8 @@ public class CrusherController : MonoBehaviour {
 				if (multiplier < 9)	//Multiplier can't be more than 9
 					multiplier++;
 				matchCounter++;
+
+                totalCorrect++;
 
 				int randomNumber = UnityEngine.Random.Range (0, 5);	//Instantiate crusher creation
 				switch (randomNumber) {
@@ -569,11 +577,10 @@ public class CrusherController : MonoBehaviour {
         MultiplierX.GetComponent<Text>().text = "";
 
         TimeUp.SetTrigger("End");
-
-        //Need to put in code to prevent player from playing after time end
+        resultsManager.StartResults(score, totalCrushes, totalCorrect);
     }
 
-	void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid
+    void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid
 	{
 		if (!leverScript.getCrushing ()) {	//Makes sure nothing can be added while crushing
 			int result = -1;	//If still -1 at end, no free space

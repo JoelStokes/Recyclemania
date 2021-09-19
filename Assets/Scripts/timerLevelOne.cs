@@ -17,7 +17,6 @@ public class timerLevelOne : MonoBehaviour
 	public bool gameEnd = false;
 	public int endCounter = 0;	//How long to show "Time Up!" before transfering to next scene
 
-    public ResultsManager resultsManager;
     public CrusherController crusherController;
 
 	/*public GameObject[] SetToFalse;	//REMOVE THESE LATER! FOR INDIVIDUAL TESTING BUILDS!!!
@@ -53,7 +52,6 @@ public class timerLevelOne : MonoBehaviour
 			timeLeft -= Time.deltaTime;
 		} else if (gameStart && !gameEnd) {
 			timerText.text = "";
-            resultsManager.StartResults();
             crusherController.EndGame();
             gameEnd = true;
 		} else if (!gameEnd) {
