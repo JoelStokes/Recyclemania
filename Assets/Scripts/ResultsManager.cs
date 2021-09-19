@@ -8,6 +8,7 @@ public class ResultsManager : MonoBehaviour
     public Animator clipboardAnim;
     public Animator letterAnim;
     public Animator pinAnim;
+    public Animator textAnim;
 
     public GameObject Accuracy;
     public GameObject CrushCount;
@@ -26,10 +27,18 @@ public class ResultsManager : MonoBehaviour
     private float clipboardLim = 1;
     private float letterLim = 2.5f;
     private bool letterStarted = false;
+    private float textLim = 3.5f;
+    private bool textStarted = false;
 
     private int finalScore = 0;
     private float finalAccuracy = 0;
     private int finalCrushes = 0;
+
+    public GameObject blurBox;
+    private float blur = 0;
+    private float blurMax = 30;
+    private float blurTimer = 0;
+    private float blurLim = .15f;
 
     private bool gameEnd = false;
 
@@ -49,6 +58,21 @@ public class ResultsManager : MonoBehaviour
     {
         if (gameEnd)
         {
+            blurTimer += Time.deltaTime;
+            if (blurTimer > blurLim && blur < blurMax)
+            {
+                if (!blurBox.activeSelf)
+                {
+                    blurBox.SetActive(true);
+                    blurTimer = 0;
+                }
+                else
+                {
+                    blurBox.GetComponent<Renderer>().sharedMaterial.SetFloat("Radius", blur);
+                    blur++;
+                    blurTimer = 0;
+                }
+            }
             clipboardTimer += Time.deltaTime;
             if (clipboardTimer > clipboardLim && !clipboardStarted)
             {
@@ -60,7 +84,10 @@ public class ResultsManager : MonoBehaviour
                 letterStarted = true;
                 letterAnim.SetTrigger("Spin");
                 pinAnim.SetTrigger("Drop");
-                Debug.Log("anim called");
+            } else if (clipboardTimer > textLim && !textStarted)
+            {
+                textAnim.SetTrigger("Show");
+                textStarted = true;
             }
         }
     }
@@ -75,17 +102,15 @@ public class ResultsManager : MonoBehaviour
         if (crushes != 0)
         {
             finalAccuracy = Mathf.Round((correct / crushes) * 100);
+
         } else
         {
             finalAccuracy = 0;
         }
-    }
 
-    private void RandomizeValues()
-    {
-        Score.GetComponent<TextMesh>().text = "";
-        Accuracy.GetComponent<TextMesh>().text = "";
-        CrushCount.GetComponent<TextMesh>().text = "";
+        Score.GetComponent<TextMesh>().text = finalScore.ToString();
+        Accuracy.GetComponent<TextMesh>().text = (Mathf.Ceil(finalAccuracy)) + "%";
+        CrushCount.GetComponent<TextMesh>().text = finalCrushes.ToString();
     }
 
     private void SetGrade()
