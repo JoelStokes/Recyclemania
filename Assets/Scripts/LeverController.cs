@@ -16,6 +16,8 @@ public class LeverController : MonoBehaviour {
 	private GameObject ScoreObject;
 	private bool gameStart = false;
 
+    public bool gameEnd = false;
+
 	public bool getCrushing()
 	{
 		return crushing;
@@ -56,11 +58,10 @@ public class LeverController : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		if (!crushing && gameStart)
+		if (!crushing && gameStart && !gameEnd)
 		{
 			crushing = true;
 			anim.SetTrigger ("Crush");	//Play lever animation
 		}
 	}
-
 }

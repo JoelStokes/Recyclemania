@@ -10,7 +10,7 @@ public class CrusherController : MonoBehaviour {
 	private int score = 0;	//Determines the level
 	private int multiplier = 1;
 	private int matchCounter = 0;
-	private float counter = 0;	//Controls how long until next object spawn
+	private float counter = 1;	//Controls how long until next object spawn
 	private const int COUNTER_DEFAULT = 23;		//20 in old
 	private const int POST_METAL_COUNTER = 43;	//40 in old
 	private float respawnRate;
@@ -82,8 +82,8 @@ public class CrusherController : MonoBehaviour {
 
 	public SpriteRenderer SpeedUp;
 	public SpriteRenderer Warning;
-	public SpriteRenderer GetReady;
-	public SpriteRenderer Go;
+	public TextMesh GetReady;
+	public TextMesh Go;
 	private float speedUpStartY;
 	private int speedUpCounter = 0;
 	private bool speedUpWait = false;
@@ -101,8 +101,14 @@ public class CrusherController : MonoBehaviour {
 	public GameObject[] GridCubeArray;	//Default 12, can change if decided not difficult enough/too difficult
 
     private bool gameEnd = false;
+    public Animator TimeUp;
+    public GameObject MultiplierX;
+    public ResultsManager resultsManager;
 
-	public void MoveConveyor()	//Animates conveyor belt movement
+    private int totalCrushes = 0;
+    private int totalCorrect = 0;
+
+    public void MoveConveyor()	//Animates conveyor belt movement
 	{
 		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed*(Time.deltaTime * 60), Conveyor.transform.position.y, 
 			Conveyor.transform.position.z);
@@ -270,9 +276,9 @@ public class CrusherController : MonoBehaviour {
 		newBlueprint ();
 	}
 
-    private void FixedUpdate()
+    /*private void FixedUpdate()
     {
-		if (backgroundConveyorCounter < 20.4f * Time.fixedTime)   //Create background conveyor objects
+		if (backgroundConveyorCounter < 20.4f * Time.fixedTime)   //Create background conveyor objects    //TO BE RE-ADDED LATER WITH BETTER PERFORMANCE
 			backgroundConveyorCounter += Time.fixedTime;
 		else
 		{
@@ -280,7 +286,7 @@ public class CrusherController : MonoBehaviour {
 			Instantiate(BackgroundConveyor, new Vector3(BlueprintConsole.transform.position.x + .05f,
 				BlueprintConsole.transform.position.y - .22f, 2.56f), Quaternion.identity);
 		}
-	}
+	}*/
 
 	// Update is called once per frame
 	void Update () {
@@ -293,12 +299,6 @@ public class CrusherController : MonoBehaviour {
 			}
 			else
 				blueprintCounter += Time.deltaTime;
-
-			if (GetReady.color.a > 0) {
-				GetReady.color = new Vector4 (1, 1, 0, GetReady.color.a - .01f * (Time.deltaTime * 60));
-				GetReady.transform.position = new Vector3 (GetReady.transform.position.x,
-					GetReady.transform.position.y - .01f * (Time.deltaTime * 60), GetReady.transform.position.z);
-			}
 
 			timerScript = ScoreObject.GetComponent<timerLevelOne> ();
 			gameStart = timerScript.gameStart;
@@ -363,7 +363,7 @@ public class CrusherController : MonoBehaviour {
 			Go.color = new Vector4 (0, 1, 0, Go.color.a - .025f * (Time.deltaTime * 60));
 		}
 
-		if (SpeedUp.color.a > 0) {
+		if (SpeedUp.color.a > 0 && !gameEnd) {
 			SpeedUp.transform.position = new Vector3 (SpeedUp.transform.position.x, SpeedUp.transform.position.y - .01f * (Time.deltaTime * 60), 
 				SpeedUp.transform.position.z);
 			if (speedUpCounter > 0) {
@@ -372,7 +372,7 @@ public class CrusherController : MonoBehaviour {
 			} else {
 				SpeedUp.color = new Vector4 (SpeedUp.color.r, SpeedUp.color.b, 1, SpeedUp.color.a - .02f * (Time.deltaTime * 60));
 			}
-		} else if (Warning.color.a > 0) {
+		} else if (Warning.color.a > 0 && !gameEnd) {
 			Warning.transform.position = new Vector3 (Warning.transform.position.x, Warning.transform.position.y - .01f * (Time.deltaTime * 60), 
 				Warning.transform.position.z);
 			if (speedUpCounter > 0) {
@@ -382,7 +382,11 @@ public class CrusherController : MonoBehaviour {
 				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a - .02f * (Time.deltaTime * 60));
 				Warning.color = new Vector4 (Warning.color.r, Warning.color.b, 0, Warning.color.a - .02f * (Time.deltaTime * 60));
 			}
-		}
+		} else if (gameEnd)
+        {
+            Warning.color = new Vector4(1, 1, 1, 0);
+            SpeedUp.color = new Vector4(1, 1, 1, 0);
+        }
 
 		if (!leverScript.getCrushing ())	//To avoid double checking crushing process
 			crushCheck = false;
@@ -401,6 +405,8 @@ public class CrusherController : MonoBehaviour {
             /*Debug.Log("Glass: " + glassCount + ", Plastic: " + plasticCount + ", Cardboard: " + cardboardCount);
             Debug.Log("Actual Values, Glass: " + glassNumber + ", Plastic: " + plasticNumber + ", Cardboard: " + cardboardCount);*/
 
+            totalCrushes++;
+
 			if ((glassCount == glassNumber) && (plasticCount == plasticNumber) && (cardboardCount == cardboardNumber)
 				&& (metalCount == metalNumber)) {
 				/*int result1 = Mathf.CeilToInt (level / 4) * BASE;
@@ -412,6 +418,8 @@ public class CrusherController : MonoBehaviour {
 				if (multiplier < 9)	//Multiplier can't be more than 9
 					multiplier++;
 				matchCounter++;
+
+                totalCorrect++;
 
 				int randomNumber = UnityEngine.Random.Range (0, 5);	//Instantiate crusher creation
 				switch (randomNumber) {
@@ -462,7 +470,7 @@ public class CrusherController : MonoBehaviour {
 			}
 
 		//Spawn Objects
-		if (counter > (respawnRate * (Time.deltaTime * 15)) - (level * 2f * (Time.deltaTime * 15)))
+		if (counter > (respawnRate * (Time.deltaTime * 20)) - ((level * 2f)*(Time.deltaTime*20)))
 		{
 			if (level > levelMetalStart)
 			{
@@ -562,13 +570,17 @@ public class CrusherController : MonoBehaviour {
     public void EndGame()
     {
         gameEnd = true;
-        ScoreObject.SetActive(false);
-        MultiplierObject.SetActive(false);
+        leverScript.gameEnd = true;
 
-        //Need to put in code to prevent player from playing after time end
+        ScoreObject.GetComponent<Text>().text = "";
+        MultiplierObject.GetComponent<Text>().text = "";
+        MultiplierX.GetComponent<Text>().text = "";
+
+        TimeUp.SetTrigger("End");
+        resultsManager.StartResults(score, totalCrushes, totalCorrect);
     }
 
-	void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid
+    void OnTriggerEnter2D(Collider2D other)	//To count what items are currently there and attach to grid
 	{
 		if (!leverScript.getCrushing ()) {	//Makes sure nothing can be added while crushing
 			int result = -1;	//If still -1 at end, no free space
