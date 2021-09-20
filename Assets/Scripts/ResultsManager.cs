@@ -126,30 +126,30 @@ public class ResultsManager : MonoBehaviour
         {
             Grade.GetComponent<TextMesh>().text = "F";
             Seal.GetComponent<SpriteRenderer>().sprite = badSeal;
-            Handwritten.GetComponent<TextMesh>().text = "I don't think you \n understand the game...";
+            Handwritten.GetComponent<TextMesh>().text = "Better luck next time. \n Why not go again?";
         } else if (finalScore < 500)
         {
             Grade.GetComponent<TextMesh>().text = "D";
             Seal.GetComponent<SpriteRenderer>().sprite = okSeal;
-            Handwritten.GetComponent<TextMesh>().text = "Well... \n The job's done.";
+            Handwritten.GetComponent<TextMesh>().text = "Satisfactory";
         }
         else if (finalScore < 1000)
         {
             Grade.GetComponent<TextMesh>().text = "C";
             Seal.GetComponent<SpriteRenderer>().sprite = okSeal;
-            Handwritten.GetComponent<TextMesh>().text = "Pretty good work.";
+            Handwritten.GetComponent<TextMesh>().text = "Pretty good work!";
         }
         else if (finalScore < 2000)
         {
             Grade.GetComponent<TextMesh>().text = "B";
             Seal.GetComponent<SpriteRenderer>().sprite = goodSeal;
-            Handwritten.GetComponent<TextMesh>().text = "Nice job!";
+            Handwritten.GetComponent<TextMesh>().text = "Nice Job! \n You crushed it!";
         }
         else if (finalScore < 3000)
         {
             Grade.GetComponent<TextMesh>().text = "A";
             Seal.GetComponent<SpriteRenderer>().sprite = goodSeal;
-            Handwritten.GetComponent<TextMesh>().text = "Wow! \n Incredible!";
+            Handwritten.GetComponent<TextMesh>().text = "Wow! \n Incredible job!";
         }
         else
         {
