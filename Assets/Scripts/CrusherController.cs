@@ -113,8 +113,8 @@ public class CrusherController : MonoBehaviour {
 		Conveyor.transform.position = new Vector3 (Conveyor.transform.position.x+speed*(Time.deltaTime * 60), Conveyor.transform.position.y, 
 			Conveyor.transform.position.z);
 
-		if (Conveyor.transform.position.x >=2.3398)
-			Conveyor.transform.position = new Vector3 (-2.7f, Conveyor.transform.position.y, Conveyor.transform.position.z);
+		if (Conveyor.transform.position.x > 2.36f)
+			Conveyor.transform.position = new Vector3 (-1.97f, Conveyor.transform.position.y, Conveyor.transform.position.z);
 	}
 
 	public void LevelUp()	//Occurs every level up, adds level, gets new values
@@ -470,7 +470,7 @@ public class CrusherController : MonoBehaviour {
 			}
 
 		//Spawn Objects
-		if (counter > (respawnRate * (Time.deltaTime * 20)) - ((level * 2f)*(Time.deltaTime*20)))
+		if (counter > (respawnRate - (level * 2f))/45)
 		{
 			if (level > levelMetalStart)
 			{

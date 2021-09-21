@@ -35,7 +35,7 @@ public class ResultsManager : MonoBehaviour
 
     private int finalScore = 0;
     private float finalAccuracy = 0;
-    private int finalCrushes = 0;
+    private float finalCrushes = 0;
 
     public GameObject blurBox;
     private float blur = 0;
@@ -99,7 +99,7 @@ public class ResultsManager : MonoBehaviour
         }
     }
 
-    public void StartResults(int score, int crushes, int correct)
+    public void StartResults(int score, float crushes, float correct)
     {
         blurAnim.SetTrigger("Blur");
         gameEnd = true;
