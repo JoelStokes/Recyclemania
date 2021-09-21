@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BGConveyorMove : MonoBehaviour
 {
-    private float endX = 3.45f;
+    private float endX = 3.42f;
     private float startX;
     private float speed = .02f;
 

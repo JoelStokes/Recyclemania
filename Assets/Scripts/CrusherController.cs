@@ -292,7 +292,7 @@ public class CrusherController : MonoBehaviour {
 	void Update () {
 
 		if (!gameStart) {
-			if (blueprintCounter > 1 * (Time.deltaTime * 60))
+			if (blueprintCounter > .08f)
 			{
 				newBlueprint();
 				blueprintCounter = 0;

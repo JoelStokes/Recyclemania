@@ -12,7 +12,7 @@ public class timerLevelOne : MonoBehaviour
 	public SpriteRenderer Black;
 	public bool gameStart = false;
 	private float startCounter = 0;
-	private float startLimit = 30;
+	private float startLimit = 2.25f;
 
 	public bool gameEnd = false;
 	public int endCounter = 0;	//How long to show "Time Up!" before transfering to next scene
@@ -57,12 +57,12 @@ public class timerLevelOne : MonoBehaviour
             crusherController.EndGame();
             gameEnd = true;
 		} else if (!gameEnd) {
-			if (startCounter > startLimit * (Time.deltaTime * 60))
+			if (startCounter > startLimit)
 				gameStart = true;
 			else
 				startCounter += Time.deltaTime;
 
-			if (Black.color.a > 0 && startCounter > 1 * (Time.deltaTime * 60))
+			if (Black.color.a > 0 && startCounter > .15f)
 				Black.color = new Vector4 (1, 1, 1, Black.color.a - .015f * (Time.deltaTime * 60));
 				
 		}
