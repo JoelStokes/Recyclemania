@@ -1,7 +1,6 @@
 # Recyclemania
 
-<img src="https://github.com/jstokesVMASC/Recyclemania/blob/main/github/RecycleScreenshot1.png" width="400" />
-<img src="https://github.com/jstokesVMASC/Recyclemania/blob/main/github/RecycleScreenshot2.png" width="400" />
+<img src="https://github.com/jstokesVMASC/Recyclemania/blob/main/github/RecycleScreenshot1.png" width="400" /><img src="https://github.com/jstokesVMASC/Recyclemania/blob/main/github/RecycleScreenshot2.png" width="400" />
 
 ## Introduction
 
