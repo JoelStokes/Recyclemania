@@ -12,7 +12,7 @@ The files in this project is the individual minigame I created, and have reboote
 
 ## How To Play
 
-The game in playable [Here at Itch.io](https://jstokesgames.itch.io/recyclemania)!
+The game is playable [Here at Itch.io](https://jstokesgames.itch.io/recyclemania)!
 
 Simply click and drap materials from the conveyor belt into the crusher, then tap the lever to crush! The longer you go with correct crushes, the higher your score multiplier will go!
 
